@@ -22,18 +22,19 @@ def intersect_xlsx(files_names):
         cpg = target_line[0]
         for key in keys[1:]:
             for item in data[key][0]:
-                if cpg == item[0]:
-                    item = list(item)
-                    item.append(target_line[1])
+                if cpg == item[0] and list(item)[0:2] not in data_intersection:
+                    item = list(item)[0:2]
                     data_intersection.append(item)
 
     fn = 'common' + keys[0][8:] + '.xlsx'
     df = pd.DataFrame(data_intersection)
-    df.columns = data_column_names
+    df = df.iloc[:, 0:2]
+    #df.columns = data_column_names
     writer = pd.ExcelWriter(fn, engine='xlsxwriter')
     df.to_excel(writer, index=False)
     writer.save()
 
-files_names = ['GSE40279_class_1.xlsx',
-               'GSE87571_class_1.xlsx']
+files_names = ['GSE40279_linreg.xlsx',
+               'GSE87571_linreg.xlsx',
+               'EPIC_linreg.xlsx']
 intersect_xlsx(files_names)
